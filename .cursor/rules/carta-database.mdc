@@ -1,0 +1,18 @@
+---
+description: Esquema Supabase y convenciones de datos
+globs: "**/*.{ts,tsx,sql}"
+alwaysApply: false
+---
+
+# Esquema principal
+
+`profiles` → `restaurants` (slug único) → `categories` → `menu_items`  
+`carta_views` (analytics) · `subscriptions` (plan: trial|basic|pro|premium, status: active|expired|cancelled)
+
+Relaciones con `on delete cascade` donde aplique. `restaurants.slug` ej: `cafe-vienna-sucre`.
+
+## Supabase en código
+- Server: `createServerClient` (@supabase/ssr)
+- Client: `createBrowserClient` solo en Client Components
+- Verificar `error` antes de `data`; RLS siempre; sin `service_role` en cliente
+- `select` solo columnas necesarias (evitar `*` en producción)

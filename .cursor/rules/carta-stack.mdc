@@ -1,0 +1,24 @@
+---
+description: Stack y estructura de carpetas del proyecto Carta
+alwaysApply: true
+---
+
+# Stack (no sugerir alternativas sin pedirlo)
+
+Next.js 14 App Router · TypeScript strict · Supabase (DB, Auth, Storage) · @supabase/ssr · Tailwind v3 · shadcn/ui · @dnd-kit/core · qrcode · Resend · Vercel · **pnpm** (nunca npm) · React state + Server Actions (sin Redux/Zustand)
+
+## Carpetas (`src/`)
+
+```
+src/app/(auth)/login|register
+src/app/(dashboard)/dashboard/{restaurante,carta,analytics,cuenta}
+src/app/carta/[slug]          # pública, SSR, sin auth
+src/app/api/
+src/components/{ui,dashboard,carta-publica,shared}
+src/lib/{supabase/{client,server,middleware}.ts,utils.ts,types.ts}
+src/hooks/
+middleware.ts                 # protege /dashboard/*
+```
+
+- `ui/`: shadcn — no editar archivos base; extender con `className`
+- Tipos de dominio en `src/lib/types.ts`

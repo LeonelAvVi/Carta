@@ -1,0 +1,20 @@
+---
+description: Reglas de código TypeScript, React y formularios
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Código
+
+- Server Components por defecto; Client solo si hay interactividad
+- Mutaciones: Server Actions (no route handlers salvo excepción)
+- Zod en Server Actions; errores en español; `useFormState` + `useFormStatus`
+- Sin `any` salvo justificado; errores explícitos, nunca silenciados
+- Tailwind mobile-first; colores de restaurante vía CSS variables
+- Nombres: PascalCase componentes; camelCase hooks/actions; tipos `RestaurantRow`, etc.
+- Comentarios: el *por qué*, en español; `// TODO(sprint-N): ...`
+- Server Actions: mismo archivo del componente o `src/app/(dashboard)/[ruta]/actions.ts`
+- No instalar dependencias nuevas sin preguntar
+
+## Env
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (solo server), `RESEND_API_KEY`, `NEXT_PUBLIC_APP_URL`

@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .font-theme-clasica {
+    font-family: var(--font-dm-sans), system-ui, sans-serif;
+  }
+
+  .font-theme-clasica .font-display {
+    font-family: var(--font-playfair), Georgia, serif;
+  }
+
+  .font-theme-moderna {
+    font-family: var(--font-poppins), system-ui, sans-serif;
+  }
+
+  .font-theme-moderna .font-display {
+    font-family: var(--font-poppins), system-ui, sans-serif;
+  }
+
+  .font-theme-editorial {
+    font-family: var(--font-dm-sans), system-ui, sans-serif;
+  }
+
+  .font-theme-editorial .font-display {
+    font-family: var(--font-lora), Georgia, serif;
+  }
+
+  .font-theme-tecnica {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .font-theme-tecnica .font-display {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+}

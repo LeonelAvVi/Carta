@@ -1,0 +1,204 @@
+# Proyecto: Carta Digital SaaS
+# Cursor AI Context — leer siempre antes de generar código
+
+## ¿Qué es este proyecto?
+Plataforma SaaS que permite a restaurantes, cafeterías y negocios con carta
+digitalizar su menú y compartirlo vía QR. El cliente escanea el QR y ve una
+carta web profesional sin instalar ninguna app.
+
+## Stack técnico (no sugerir alternativas salvo que se pida explícitamente)
+- **Framework:** Next.js 14 con App Router
+- **Lenguaje:** TypeScript (strict mode siempre)
+- **Base de datos:** Supabase (PostgreSQL)
+- **Auth:** Supabase Auth con @supabase/ssr
+- **Storage:** Supabase Storage (logos e imágenes de platos)
+- **Estilos:** Tailwind CSS v3
+- **Componentes UI:** shadcn/ui
+- **Drag & drop:** @dnd-kit/core
+- **QR:** librería `qrcode`
+- **Email:** Resend + Supabase Edge Functions
+- **Deploy:** Vercel
+- **Gestor de paquetes:** pnpm (nunca npm)
+- **Gestión de estado:** solo React state + server actions (no Redux, no Zustand)
+
+## Estructura de carpetas (respetar siempre)
+```
+src/
+  app/
+    (auth)/
+      login/
+      register/
+    (dashboard)/
+      dashboard/
+        restaurante/        ← info del restaurante
+        carta/              ← gestión de categorías y platos
+        analytics/          ← visitas y métricas
+        cuenta/             ← plan, suscripción
+    carta/
+      [slug]/               ← carta pública (sin auth, SSR)
+    api/                    ← route handlers cuando sea necesario
+  components/
+    ui/                     ← shadcn/ui (no modificar directamente)
+    dashboard/              ← componentes del panel admin
+    carta-publica/          ← componentes de la carta visible al cliente
+    shared/                 ← componentes reutilizables entre ambos
+  lib/
+    supabase/
+      client.ts             ← cliente browser
+      server.ts             ← cliente server (cookies)
+      middleware.ts         ← helper para middleware
+    utils.ts
+    types.ts                ← todos los tipos TypeScript del dominio
+  hooks/                    ← custom hooks reutilizables
+middleware.ts               ← protección de rutas /dashboard/*
+```
+
+## Esquema de base de datos
+```sql
+-- Usuario (gestionado por Supabase Auth)
+profiles (
+  id uuid references auth.users primary key,
+  full_name text,
+  email text,
+  created_at timestamptz default now()
+)
+
+-- Restaurante (1 por usuario en plan básico)
+restaurants (
+  id uuid primary key default gen_random_uuid(),
+  owner_id uuid references profiles(id),
+  name text not null,
+  slug text unique not null,       -- ej: "cafe-vienna-sucre"
+  description text,
+  logo_url text,
+  primary_color text default '#000000',
+  is_active boolean default true,
+  created_at timestamptz default now()
+)
+
+-- Categorías de la carta
+categories (
+  id uuid primary key default gen_random_uuid(),
+  restaurant_id uuid references restaurants(id) on delete cascade,
+  name text not null,
+  position integer not null default 0,
+  is_active boolean default true
+)
+
+-- Platos / items
+menu_items (
+  id uuid primary key default gen_random_uuid(),
+  category_id uuid references categories(id) on delete cascade,
+  restaurant_id uuid references restaurants(id) on delete cascade,
+  name text not null,
+  description text,
+  price decimal(10,2),
+  image_url text,
+  is_available boolean default true,
+  position integer not null default 0,
+  created_at timestamptz default now()
+)
+
+-- Visitas a la carta pública
+carta_views (
+  id uuid primary key default gen_random_uuid(),
+  restaurant_id uuid references restaurants(id) on delete cascade,
+  viewed_at timestamptz default now(),
+  user_agent text
+)
+
+-- Suscripciones
+subscriptions (
+  id uuid primary key default gen_random_uuid(),
+  restaurant_id uuid references restaurants(id) on delete cascade,
+  plan text not null default 'trial',  -- 'trial' | 'basic' | 'pro' | 'premium'
+  status text not null default 'active', -- 'active' | 'expired' | 'cancelled'
+  trial_ends_at timestamptz,
+  current_period_end timestamptz,
+  created_at timestamptz default now()
+)
+```
+
+## Planes y límites
+| Plan    | Precio/mes | Platos máx | Fotos | Analytics | Sucursales |
+|---------|-----------|------------|-------|-----------|------------|
+| Trial   | gratis    | 30         | sí    | básico    | 1          |
+| Básico  | $7 USD    | 30         | no    | básico    | 1          |
+| Pro     | $18 USD   | ilimitados | sí    | completo  | 1          |
+| Premium | $35 USD   | ilimitados | sí    | completo  | 5          |
+
+## Reglas de código (seguir siempre)
+
+### General
+- TypeScript strict, sin `any` salvo casos extremos justificados con comentario
+- Siempre manejar errores explícitamente (no swallow errors silenciosos)
+- Server Actions para mutaciones, no route handlers, salvo que haya razón
+- Preferir Server Components; Client Components solo cuando se necesita interactividad
+- No instalar librerías nuevas sin preguntar primero
+
+### Supabase
+- Usar `createServerClient` (de @supabase/ssr) en Server Components y Actions
+- Usar `createBrowserClient` solo en Client Components
+- Siempre verificar `error` del resultado antes de usar `data`
+- RLS habilitado en todas las tablas — nunca hacer bypass con service_role en el cliente
+- Queries deben seleccionar solo las columnas necesarias (no `select *` en producción)
+
+### Formularios y validación
+- Validación con Zod en Server Actions
+- Mensajes de error en español
+- useFormState + useFormStatus para feedback de loading/error
+
+### Estilos
+- Tailwind utility classes, sin CSS modules salvo excepción justificada
+- Mobile-first siempre (la carta pública se ve principalmente en celular)
+- Colores personalizados del restaurante via CSS custom properties, no hardcodeados
+- Clases de shadcn/ui no modificar directamente — extender via className prop
+
+### Nomenclatura
+- Componentes: PascalCase (`CartaHeader.tsx`)
+- Funciones/hooks: camelCase (`useRestaurantData`)
+- Server Actions: verbos en camelCase (`createMenuItem`, `updateCategory`)
+- Variables de entorno: SCREAMING_SNAKE_CASE, prefijo `NEXT_PUBLIC_` solo si van al cliente
+- Tipos: PascalCase con sufijo descriptivo (`RestaurantRow`, `MenuItemWithCategory`)
+
+### Comentarios
+- Comentar el *por qué*, no el *qué*
+- TODOs con formato: `// TODO(sprint-2): agregar paginación cuando haya más de 50 platos`
+- En español, igual que el resto del proyecto
+
+## Contexto de negocio (importante para decisiones de UX/UI)
+- **Usuario principal:** dueño de restaurante en Bolivia, 30–55 años, no muy técnico
+- **Cliente final:** comensal que escanea el QR con el celular
+- **Prioridad UX:** la carta pública debe cargar en < 2 segundos en 3G
+- **Idioma de la UI:** español latinoamericano (Bolivia)
+- **Moneda:** mostrar precios en Bs. (bolivianos) por defecto, configurable
+- **Sin app:** el comensal nunca instala nada — solo web
+- **El dueño actualiza desde el celular:** el dashboard debe funcionar bien en mobile
+
+## Lo que NO se hace todavía (no sugerir ni implementar)
+- Sistema de pedidos online
+- Pagos del comensal en la carta
+- Sistema de gifts/vouchers
+- Integración con POS o impresoras
+- App nativa (iOS/Android)
+- Dominio personalizado por restaurante
+- Multilenguaje en la carta pública
+
+## Variables de entorno necesarias
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+SUPABASE_SERVICE_ROLE_KEY=       # solo en server, nunca al cliente
+RESEND_API_KEY=
+NEXT_PUBLIC_APP_URL=             # ej: https://tucarta.bo
+```
+
+## Convención de respuesta esperada de Cursor
+Cuando generes código para este proyecto:
+1. Respetar la estructura de carpetas definida arriba
+2. Incluir los imports necesarios completos
+3. Tipar todo correctamente con los tipos de `src/lib/types.ts`
+4. Si creas un Server Action, ponerlo en el mismo archivo del componente
+   o en `src/app/(dashboard)/[ruta]/actions.ts`
+5. Si el código toca Supabase, siempre verificar el error antes de usar data
+6. Si hay lógica de negocio compleja, agregar un comentario explicando el por qué

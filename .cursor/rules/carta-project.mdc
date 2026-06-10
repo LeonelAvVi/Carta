@@ -1,0 +1,24 @@
+---
+description: Contexto del producto Carta Digital SaaS, negocio y alcance
+alwaysApply: true
+---
+
+# Carta Digital SaaS
+
+Plataforma SaaS para digitalizar menús y compartirlos vía QR. El comensal escanea y ve la carta en web, sin app.
+
+## Usuario y UX
+- **Dueño:** restaurante en Bolivia, 30–55 años, poco técnico; dashboard usable en móvil
+- **Comensal:** escanea QR en celular; carta pública < 2 s en 3G
+- **UI:** español latinoamericano (Bolivia); precios en Bs. por defecto
+
+## Fuera de scope (no implementar ni sugerir)
+Pedidos online, pagos en carta, gifts/vouchers, POS, app nativa, dominio custom por restaurante, multilenguaje en carta pública.
+
+## Planes
+| Plan | Precio | Platos | Fotos | Analytics | Sucursales |
+|------|--------|--------|-------|-----------|------------|
+| Trial | gratis | 30 | sí | básico | 1 |
+| Básico | $7 | 30 | no | básico | 1 |
+| Pro | $18 | ∞ | sí | completo | 1 |
+| Premium | $35 | ∞ | sí | completo | 5 |
