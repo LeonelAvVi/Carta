@@ -1,4 +1,5 @@
 import type { CategoryWithProducts, RestaurantThemeRow } from "@/lib/types";
+import { AddToCartControl } from "@/components/carta-publica/add-to-cart-control";
 import { getPublicItemPriceLabel } from "@/lib/carta/item-price";
 import { formatPriceBs } from "@/lib/utils";
 
@@ -47,10 +48,11 @@ export function AtrevidaItemList({ category, theme }: AtrevidaItemListProps) {
           return (
             <li
               key={item.id}
-              className="flex items-start justify-between gap-2 border-b py-2 last:border-b-0"
+              className="border-b py-2 last:border-b-0"
               style={{ borderColor: "var(--item-border)" }}
             >
-              <div className="min-w-0 flex-1">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
                 <h3
                   className="text-[11px] font-semibold"
                   style={{ color: "var(--item-name-color)" }}
@@ -110,6 +112,9 @@ export function AtrevidaItemList({ category, theme }: AtrevidaItemListProps) {
                   {getPublicItemPriceLabel(item)}
                 </p>
               ) : null}
+              </div>
+
+              <AddToCartControl item={item} className="mt-2" compact />
             </li>
           );
         })}

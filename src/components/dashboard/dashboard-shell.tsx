@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
-import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/shared/logout-button";
+import type { RestaurantAccess } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 type NavItem = {
   href: string;
@@ -16,29 +17,45 @@ type DashboardShellProps = {
   children: React.ReactNode;
   displayName: string;
   email?: string | null;
+  access: RestaurantAccess | null;
 };
 
-export function DashboardShell({ children, displayName, email }: DashboardShellProps) {
+const ownerNavItems: NavItem[] = [
+  { href: "/dashboard", label: "Panel", description: "Resumen" },
+  { href: "/dashboard/restaurante", label: "Restaurante", description: "Datos y branding" },
+  { href: "/dashboard/carta", label: "Carta", description: "Categorías y platos" },
+  { href: "/dashboard/mesas", label: "Mesas", description: "QR por mesa" },
+  { href: "/dashboard/pedidos", label: "Pedidos", description: "Pedidos en vivo" },
+  { href: "/dashboard/staff", label: "Mapa de mesas", description: "Vista de mostrador" },
+  { href: "/dashboard/equipo", label: "Equipo", description: "Personal del local" },
+  { href: "/dashboard/apariencia", label: "Apariencia", description: "Tema de la carta" },
+  { href: "/dashboard/analytics", label: "Analytics", description: "Ventas y ranking" },
+  { href: "/dashboard/cuenta", label: "Cuenta", description: "Plan y suscripción" },
+];
+
+const employeeNavItems: NavItem[] = [
+  { href: "/dashboard/staff", label: "Mapa de mesas", description: "Vista de mostrador" },
+];
+
+export function DashboardShell({
+  children,
+  displayName,
+  email,
+  access,
+}: DashboardShellProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const navItems: NavItem[] = useMemo(
-    () => [
-      { href: "/dashboard", label: "Panel", description: "Resumen" },
-      { href: "/dashboard/restaurante", label: "Restaurante", description: "Datos y branding" },
-      { href: "/dashboard/carta", label: "Carta", description: "Categorías y platos" },
-      { href: "/dashboard/apariencia", label: "Apariencia", description: "Tema de la carta" },
-      { href: "/dashboard/analytics", label: "Analytics", description: "Visitas y métricas" },
-      { href: "/dashboard/cuenta", label: "Cuenta", description: "Plan y suscripción" },
-    ],
-    []
+  const navItems = useMemo(
+    () => (access?.role === "employee" ? employeeNavItems : ownerNavItems),
+    [access?.role]
   );
 
   const sidebar = (
     <aside className="flex h-full w-72 flex-col border-r border-slate-200 bg-white">
       <div className="flex items-center justify-between gap-3 px-4 py-4">
         <Link
-          href="/dashboard"
+          href={access?.role === "employee" ? "/dashboard/staff" : "/dashboard"}
           className="text-base font-semibold text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
           onClick={() => setMobileOpen(false)}
         >
@@ -59,12 +76,16 @@ export function DashboardShell({ children, displayName, email }: DashboardShellP
       <div className="px-4 pb-4">
         <p className="text-sm font-medium text-slate-900">Hola, {displayName}</p>
         {email ? <p className="mt-1 truncate text-xs text-slate-500">{email}</p> : null}
+        {access?.role === "employee" ? (
+          <p className="mt-2 text-xs font-medium text-amber-700">Modo empleado</p>
+        ) : null}
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-2 pb-4">
         {navItems.map((item) => {
           const active =
-            pathname === item.href || (item.href !== "/dashboard" && pathname?.startsWith(item.href));
+            pathname === item.href ||
+            (item.href !== "/dashboard" && pathname?.startsWith(item.href));
 
           return (
             <Link
@@ -150,4 +171,3 @@ export function DashboardShell({ children, displayName, email }: DashboardShellP
     </div>
   );
 }
-

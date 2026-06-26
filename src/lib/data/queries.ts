@@ -5,9 +5,11 @@ import type {
   CategoryWithProducts,
   DashboardStats,
   MenuItemRow,
+  PeriodSalesReport,
   ProfileRow,
   RestaurantRow,
   SubscriptionRow,
+  TopProductRow,
 } from "@/lib/types";
 import { normalizeMenuItemVariations } from "@/lib/utils/menu-item";
 
@@ -217,6 +219,50 @@ export function getPublicCartaUrl(slug: string): string {
   if (base) return `${base}/carta/${slug}`;
   return `/carta/${slug}`;
 }
+
+export const getTopProductsByPeriod = cache(
+  async (
+    restaurantId: string,
+    year: number,
+    month: number
+  ): Promise<PeriodSalesReport | null> => {
+    const { supabase, user } = await getAuthenticatedClient();
+    if (!user) return null;
+
+    const { data, error } = await supabase.rpc("get_top_products_by_period", {
+      p_restaurant_id: restaurantId,
+      p_year: year,
+      p_month: month,
+    });
+
+    if (error) {
+      console.error("getTopProductsByPeriod:", error.message);
+      return null;
+    }
+
+    if (!data || typeof data !== "object") {
+      return { products: [], total_revenue: 0, order_count: 0 };
+    }
+
+    const payload = data as {
+      products?: TopProductRow[] | null;
+      total_revenue?: number | string;
+      order_count?: number | string;
+    };
+
+    return {
+      products: (payload.products ?? []).map((row) => ({
+        menu_item_id: row.menu_item_id,
+        name: row.name,
+        total_quantity: Number(row.total_quantity),
+        total_revenue: Number(row.total_revenue),
+        rank: row.rank,
+      })),
+      total_revenue: Number(payload.total_revenue ?? 0),
+      order_count: Number(payload.order_count ?? 0),
+    };
+  }
+);
 
 export const PLAN_LABELS: Record<SubscriptionRow["plan"], string> = {
   trial: "Trial (gratis)",

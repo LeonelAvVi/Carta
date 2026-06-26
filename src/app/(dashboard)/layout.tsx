@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
-import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { DashboardLayoutClient } from "@/components/dashboard/dashboard-layout-client";
 import { getCurrentProfile } from "@/lib/data/queries";
+import { getRestaurantAccess } from "@/lib/data/restaurant-access";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function DashboardLayout({
@@ -18,7 +19,10 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  const profile = await getCurrentProfile();
+  const [profile, access] = await Promise.all([
+    getCurrentProfile(),
+    getRestaurantAccess(),
+  ]);
 
   const displayName =
     profile?.full_name ??
@@ -27,8 +31,12 @@ export default async function DashboardLayout({
     "Usuario";
 
   return (
-    <DashboardShell displayName={displayName} email={profile?.email ?? user.email}>
+    <DashboardLayoutClient
+      displayName={displayName}
+      email={profile?.email ?? user.email}
+      access={access}
+    >
       {children}
-    </DashboardShell>
+    </DashboardLayoutClient>
   );
 }

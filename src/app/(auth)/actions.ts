@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { getPostLoginPath } from "@/lib/data/restaurant-access";
 import { mapAuthErrorMessage } from "@/lib/auth/errors";
 import { loginSchema, registerSchema } from "@/lib/validations/auth";
 
@@ -71,7 +72,7 @@ export async function loginAction(
     return { error: mapAuthErrorMessage(error.message) };
   }
 
-  redirect("/dashboard");
+  redirect(await getPostLoginPath());
 }
 
 export async function registerAction(
@@ -109,7 +110,7 @@ export async function registerAction(
   }
 
   if (data.session) {
-    redirect("/dashboard");
+    redirect(await getPostLoginPath());
   }
 
   return {

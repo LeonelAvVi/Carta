@@ -178,3 +178,94 @@ export type PublicCartaPayload = {
     allNavCategories: CategoryWithProducts[];
   };
 };
+
+export type TableRow = {
+  id: string;
+  restaurant_id: string;
+  name: string;
+  slug: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "preparing"
+  | "ready"
+  | "delivered"
+  | "cancelled";
+
+export type OrderItemRow = {
+  menu_item_id: string;
+  name: string;
+  quantity: number;
+  unit_price: number;
+  line_total: number;
+  variation_id?: string | null;
+  variation_name?: string | null;
+};
+
+export type OrderRow = {
+  id: string;
+  restaurant_id: string;
+  table_id: string;
+  items: OrderItemRow[];
+  status: OrderStatus;
+  total: number;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type OrderWithTable = OrderRow & {
+  table: Pick<TableRow, "id" | "name" | "slug">;
+};
+
+export type CartLineItem = {
+  key: string;
+  menu_item_id: string;
+  name: string;
+  quantity: number;
+  unit_price: number;
+  variation_id?: string | null;
+  variation_name?: string | null;
+  image_url?: string | null;
+};
+
+export type TableContext = Pick<TableRow, "id" | "name" | "slug" | "restaurant_id">;
+
+export type RestaurantAccessRole = "owner" | "employee";
+
+export type RestaurantAccess = {
+  role: RestaurantAccessRole;
+  restaurantId: string;
+  restaurant: RestaurantRow;
+  userId: string;
+};
+
+export type RestaurantEmployeeRow = {
+  id: string;
+  restaurant_id: string;
+  profile_id: string;
+  created_at: string;
+};
+
+export type RestaurantEmployeeWithProfile = RestaurantEmployeeRow & {
+  profile: Pick<ProfileRow, "id" | "full_name" | "email">;
+};
+
+export type TopProductRow = {
+  rank?: number;
+  menu_item_id: string;
+  name: string;
+  total_quantity: number;
+  total_revenue: number;
+};
+
+export type PeriodSalesReport = {
+  products: TopProductRow[];
+  total_revenue: number;
+  order_count: number;
+};

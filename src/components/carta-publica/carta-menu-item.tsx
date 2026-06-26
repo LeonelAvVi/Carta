@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { AddToCartControl } from "@/components/carta-publica/add-to-cart-control";
 import type { MenuItemRow, RestaurantThemeRow } from "@/lib/types";
 import { formatPriceBs } from "@/lib/utils";
 
@@ -100,6 +101,8 @@ export function CartaMenuItem({ item, theme }: CartaMenuItemProps) {
             ))}
           </ul>
         ) : null}
+
+        <AddToCartControl item={item} className="mt-3" />
       </div>
     </article>
   );

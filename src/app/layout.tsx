@@ -5,8 +5,11 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Carta",
-  description: "Carta digital",
+  title: {
+    default: "TuCarta.bo",
+    template: "%s | TuCarta.bo",
+  },
+  description: "Carta digital y gestión de pedidos por QR para restaurantes en Bolivia",
 };
 
 export default function RootLayout({

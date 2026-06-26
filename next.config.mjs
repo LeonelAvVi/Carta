@@ -1,5 +1,19 @@
 /** @type {import('next').NextConfig} */
+const serverActionOrigins = process.env.SERVER_ACTIONS_ALLOWED_ORIGINS?.split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+/** @type {import('next').NextConfig} */
 const nextConfig = {
+  ...(serverActionOrigins?.length
+    ? {
+        experimental: {
+          serverActions: {
+            allowedOrigins: serverActionOrigins,
+          },
+        },
+      }
+    : {}),
   images: {
     remotePatterns: [
       {
@@ -9,6 +23,7 @@ const nextConfig = {
       },
     ],
   },
+  transpilePackages: ["@supabase/ssr", "@supabase/supabase-js"],
 };
 
 export default nextConfig;

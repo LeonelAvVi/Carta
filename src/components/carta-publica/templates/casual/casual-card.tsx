@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { AddToCartControl } from "@/components/carta-publica/add-to-cart-control";
 import type { MenuItemRow, RestaurantThemeRow } from "@/lib/types";
 import { getPublicItemPriceLabel } from "@/lib/carta/item-price";
 import { formatPriceBs } from "@/lib/utils";
@@ -91,6 +92,8 @@ export function CasualCard({ item, theme }: CasualCardProps) {
             {getPublicItemPriceLabel(item)}
           </p>
         )}
+
+        <AddToCartControl item={item} className="mt-2" compact />
       </div>
     </article>
   );
