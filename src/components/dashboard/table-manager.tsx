@@ -10,7 +10,7 @@ import {
 } from "@/app/(dashboard)/dashboard/mesas/actions";
 import { AuthField } from "@/components/shared/auth-field";
 import { SubmitButton } from "@/components/shared/submit-button";
-import { getTableCartaUrl } from "@/lib/carta/table-urls";
+import { getTableCartaUrl, isDeliveryTableSlug } from "@/lib/carta/table-urls";
 import type { RestaurantRow, TableRow } from "@/lib/types";
 import { slugifyName } from "@/lib/utils/slug";
 import { cn } from "@/lib/utils";
@@ -142,6 +142,7 @@ function TableForm({
 
 export function TableManager({ tables, restaurant }: TableManagerProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
+  const dineInTables = tables.filter((t) => !isDeliveryTableSlug(t.slug));
 
   return (
     <div className="flex flex-col gap-6">
@@ -149,6 +150,7 @@ export function TableManager({ tables, restaurant }: TableManagerProps) {
         <h2 className="text-lg font-semibold text-slate-900">Nueva mesa</h2>
         <p className="mt-1 text-sm text-slate-600">
           Cada mesa tiene un enlace único. Imprimí el QR y colocalo en la mesa.
+          El QR de delivery se gestiona desde el Panel.
         </p>
         <div className="mt-4">
           <TableForm restaurant={restaurant} />
@@ -157,16 +159,16 @@ export function TableManager({ tables, restaurant }: TableManagerProps) {
 
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-slate-900">
-          Mesas ({tables.length})
+          Mesas ({dineInTables.length})
         </h2>
 
-        {tables.length === 0 ? (
+        {dineInTables.length === 0 ? (
           <p className="mt-4 text-sm text-slate-600">
             Aún no hay mesas. Crea la primera arriba.
           </p>
         ) : (
           <ul className="mt-4 flex flex-col gap-4">
-            {tables.map((table) => (
+            {dineInTables.map((table) => (
               <li
                 key={table.id}
                 className={cn(

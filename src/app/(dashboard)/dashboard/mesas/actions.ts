@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { isDeliveryTableSlug } from "@/lib/carta/table-urls";
 import { tableFormSchema } from "@/lib/validations/table";
 import { slugifyName } from "@/lib/utils/slug";
 
@@ -70,6 +71,12 @@ export async function createTableAction(
   const ctx = await getOwnerRestaurantId();
   if (!ctx) return { error: "No se encontró tu restaurante" };
 
+  if (isDeliveryTableSlug(parsed.data.slug)) {
+    return {
+      error: "El identificador “delivery” está reservado. Usá el QR Delivery del Panel.",
+    };
+  }
+
   const { error } = await ctx.supabase.from("tables").insert({
     restaurant_id: ctx.restaurantId,
     name: parsed.data.name,
@@ -113,6 +120,12 @@ export async function updateTableAction(
   const ctx = await getOwnerRestaurantId();
   if (!ctx) return { error: "No se encontró tu restaurante" };
 
+  if (isDeliveryTableSlug(parsed.data.slug)) {
+    return {
+      error: "El identificador “delivery” está reservado. Usá el QR Delivery del Panel.",
+    };
+  }
+
   const { error } = await ctx.supabase
     .from("tables")
     .update({
@@ -138,6 +151,21 @@ export async function updateTableAction(
 export async function deleteTableAction(tableId: string): Promise<TableActionState> {
   const ctx = await getOwnerRestaurantId();
   if (!ctx) return { error: "No se encontró tu restaurante" };
+
+  const { data: table, error: lookupError } = await ctx.supabase
+    .from("tables")
+    .select("slug")
+    .eq("id", tableId)
+    .eq("restaurant_id", ctx.restaurantId)
+    .maybeSingle();
+
+  if (lookupError || !table) {
+    return { error: "Mesa no encontrada" };
+  }
+
+  if (isDeliveryTableSlug(table.slug)) {
+    return { error: "La mesa Delivery no se puede eliminar. Se gestiona desde el Panel." };
+  }
 
   const { error } = await ctx.supabase
     .from("tables")

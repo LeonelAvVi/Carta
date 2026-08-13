@@ -7,6 +7,7 @@ import {
   getPublicCartaUrl,
   getTopProductsByPeriod,
 } from "@/lib/data/queries";
+import { getRequestAppBaseUrl } from "@/lib/carta/request-app-url";
 import { analyticsPeriodSchema } from "@/lib/validations/analytics";
 
 export const metadata: Metadata = {
@@ -63,7 +64,7 @@ export default async function AnalyticsPage({ searchParams }: AnalyticsPageProps
           <span className="font-medium text-slate-900">{restaurant.name}</span>
         </p>
         <p className="mt-2 text-sm text-slate-500">
-          Carta pública: {getPublicCartaUrl(restaurant.slug)}
+          Carta pública: {getPublicCartaUrl(restaurant.slug, getRequestAppBaseUrl())}
         </p>
       </section>
 

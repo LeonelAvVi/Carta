@@ -179,12 +179,18 @@ export type PublicCartaPayload = {
   };
 };
 
+export type TableAssistanceKind = "waiter" | "bill";
+
 export type TableRow = {
   id: string;
   restaurant_id: string;
   name: string;
   slug: string;
   is_active: boolean;
+  assistance_kind?: TableAssistanceKind | null;
+  assistance_requested_at?: string | null;
+  discount_amount?: number | null;
+  discount_description?: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -195,7 +201,8 @@ export type OrderStatus =
   | "preparing"
   | "ready"
   | "delivered"
-  | "cancelled";
+  | "cancelled"
+  | "closed";
 
 export type OrderItemRow = {
   menu_item_id: string;

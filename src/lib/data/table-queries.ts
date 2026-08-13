@@ -1,4 +1,8 @@
 import { cache } from "react";
+import {
+  DELIVERY_TABLE_NAME,
+  DELIVERY_TABLE_SLUG,
+} from "@/lib/carta/table-urls";
 import { createClient } from "@/lib/supabase/server";
 import type { OrderItemRow, OrderRow, OrderWithTable, TableRow } from "@/lib/types";
 import { mapOrderWithTable, ORDER_WITH_TABLE_SELECT } from "@/lib/data/order-mappers";
@@ -12,7 +16,7 @@ export const getTableBySlug = cache(
 
     const { data, error } = await supabase
       .from("tables")
-      .select("id, restaurant_id, name, slug, is_active, created_at, updated_at")
+      .select("id, restaurant_id, name, slug, is_active, assistance_kind, assistance_requested_at, discount_amount, discount_description, created_at, updated_at")
       .eq("restaurant_id", restaurantId)
       .eq("slug", tableSlug)
       .eq("is_active", true)
@@ -46,7 +50,7 @@ export const getOwnerTables = cache(async (): Promise<TableRow[]> => {
 
   const { data, error } = await supabase
     .from("tables")
-    .select("id, restaurant_id, name, slug, is_active, created_at, updated_at")
+    .select("id, restaurant_id, name, slug, is_active, assistance_kind, assistance_requested_at, discount_amount, discount_description, created_at, updated_at")
     .eq("restaurant_id", restaurant.id)
     .order("name", { ascending: true });
 
@@ -57,6 +61,61 @@ export const getOwnerTables = cache(async (): Promise<TableRow[]> => {
 
   return data ?? [];
 });
+
+/** Mesa reservada para pedidos delivery (slug fijo). La crea si no existe. */
+export async function ensureDeliveryTable(
+  restaurantId: string
+): Promise<TableRow | null> {
+  const supabase = createClient();
+
+  const { data: existing, error: existingError } = await supabase
+    .from("tables")
+    .select("id, restaurant_id, name, slug, is_active, assistance_kind, assistance_requested_at, discount_amount, discount_description, created_at, updated_at")
+    .eq("restaurant_id", restaurantId)
+    .eq("slug", DELIVERY_TABLE_SLUG)
+    .maybeSingle();
+
+  if (existingError) {
+    console.error("ensureDeliveryTable lookup:", existingError.message);
+    return null;
+  }
+
+  if (existing) {
+    if (!existing.is_active) {
+      const { data: reactivated, error: reactivateError } = await supabase
+        .from("tables")
+        .update({ is_active: true, name: DELIVERY_TABLE_NAME })
+        .eq("id", existing.id)
+        .select("id, restaurant_id, name, slug, is_active, assistance_kind, assistance_requested_at, discount_amount, discount_description, created_at, updated_at")
+        .single();
+
+      if (reactivateError) {
+        console.error("ensureDeliveryTable reactivate:", reactivateError.message);
+        return existing;
+      }
+      return reactivated;
+    }
+    return existing;
+  }
+
+  const { data: created, error: createError } = await supabase
+    .from("tables")
+    .insert({
+      restaurant_id: restaurantId,
+      name: DELIVERY_TABLE_NAME,
+      slug: DELIVERY_TABLE_SLUG,
+      is_active: true,
+    })
+    .select("id, restaurant_id, name, slug, is_active, assistance_kind, assistance_requested_at, discount_amount, discount_description, created_at, updated_at")
+    .single();
+
+  if (createError) {
+    console.error("ensureDeliveryTable create:", createError.message);
+    return null;
+  }
+
+  return created;
+}
 
 export const getOwnerOrders = cache(
   async (statusFilter?: OrderRow["status"]): Promise<OrderWithTable[]> => {

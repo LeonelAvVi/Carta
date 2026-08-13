@@ -3,13 +3,13 @@ import { LandingPage } from "@/components/landing/landing-page";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "TuCarta.bo — Menú QR y gestión de pedidos para restaurantes",
+  title: "Tu QaRta — El menú inteligente",
   description:
-    "Digitaliza tu carta, recibe pedidos en tiempo real y analiza tus ventas. Solución ideal para restaurantes en Bolivia. Precios en bolivianos, sin app para el comensal.",
+    "La nueva forma de mostrar tu menú. Carta digital, pedidos por mesa y analytics. Más que un QR — hecho para restaurantes en Bolivia.",
   openGraph: {
-    title: "TuCarta.bo — Menú QR y gestión de pedidos",
+    title: "Tu QaRta — El menú inteligente",
     description:
-      "Moderniza tu local con carta digital, pedidos por mesa y analytics. Hecho para Bolivia.",
+      "Convierte cada mesa en una experiencia. Menú digital, pedidos en vivo y gestión inteligente.",
     type: "website",
   },
 };

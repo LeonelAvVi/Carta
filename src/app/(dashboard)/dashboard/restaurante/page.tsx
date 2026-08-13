@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { RestaurantForm } from "@/components/dashboard/restaurant-form";
+import { getRequestAppBaseUrl } from "@/lib/carta/request-app-url";
 import { getOwnerRestaurant, getPublicCartaUrl } from "@/lib/data/queries";
 
 export const metadata: Metadata = {
@@ -9,6 +10,9 @@ export const metadata: Metadata = {
 
 export default async function RestaurantePage() {
   const restaurant = await getOwnerRestaurant();
+  const publicUrl = restaurant
+    ? getPublicCartaUrl(restaurant.slug, getRequestAppBaseUrl())
+    : null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -57,14 +61,16 @@ export default async function RestaurantePage() {
             <div className="sm:col-span-2">
               <dt className="text-slate-500">Enlace público</dt>
               <dd className="mt-1 break-all font-medium text-slate-900">
-                <a
-                  href={getPublicCartaUrl(restaurant.slug)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline-offset-4 hover:underline"
-                >
-                  {getPublicCartaUrl(restaurant.slug)}
-                </a>
+                {publicUrl ? (
+                  <a
+                    href={publicUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline-offset-4 hover:underline"
+                  >
+                    {publicUrl}
+                  </a>
+                ) : null}
               </dd>
             </div>
           </dl>

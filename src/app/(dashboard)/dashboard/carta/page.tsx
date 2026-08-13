@@ -6,6 +6,7 @@ import {
   getOwnerRestaurant,
   getPublicCartaUrl,
 } from "@/lib/data/queries";
+import { getRequestAppBaseUrl } from "@/lib/carta/request-app-url";
 
 export const metadata: Metadata = {
   title: "Carta | Carta",
@@ -32,6 +33,7 @@ export default async function CartaPage() {
   }
 
   const categories = await getCategoriesWithProducts(restaurant.id);
+  const publicUrl = getPublicCartaUrl(restaurant.slug, getRequestAppBaseUrl());
 
   return (
     <div className="flex flex-col gap-6">
@@ -54,7 +56,7 @@ export default async function CartaPage() {
               Elegir plantilla
             </Link>
             <a
-              href={getPublicCartaUrl(restaurant.slug)}
+              href={publicUrl}
               target="_blank"
               rel="noreferrer"
               className="inline-flex h-11 items-center justify-center rounded-lg border border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"

@@ -17,9 +17,9 @@ export default async function StaffPage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <div className="mx-auto max-w-[1600px] px-6 py-6 lg:px-10 lg:py-8">
-        <div className="mb-4 flex items-center justify-between gap-4">
+    <div className="flex h-dvh flex-col overflow-hidden bg-slate-950 text-white">
+      <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col px-6 py-4 lg:px-10 lg:py-5">
+        <div className="mb-4 flex shrink-0 items-center justify-between gap-4">
           {access.role === "owner" ? (
             <Link
               href="/dashboard"
@@ -28,14 +28,14 @@ export default async function StaffPage() {
               ← Volver al panel
             </Link>
           ) : (
-            <p className="text-sm text-slate-500">TuCarta.bo · Modo empleado</p>
+            <p className="text-sm text-slate-500">Tu QaRta · Modo empleado</p>
           )}
           <div className="[&_button]:border-slate-600 [&_button]:text-slate-300 [&_button]:hover:bg-slate-800">
             <LogoutButton />
           </div>
         </div>
 
-        <div className="hidden min-[1024px]:block">
+        <div className="hidden min-h-0 flex-1 min-[1024px]:flex min-[1024px]:flex-col">
           <StaffFloorLive
             restaurant={access.restaurant}
             initialTables={tables}
@@ -43,7 +43,7 @@ export default async function StaffPage() {
           />
         </div>
 
-        <div className="flex min-h-[60vh] items-center justify-center min-[1024px]:hidden">
+        <div className="flex min-h-0 flex-1 items-center justify-center min-[1024px]:hidden">
           <div className="max-w-md rounded-2xl border border-slate-700 bg-slate-900 p-8 text-center">
             <h2 className="text-xl font-semibold text-white">Vista de mostrador</h2>
             <p className="mt-3 text-sm text-slate-400">

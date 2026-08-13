@@ -32,12 +32,12 @@ export function EmployeeManager({ employees }: EmployeeManagerProps) {
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-slate-900">Agregar empleado</h2>
         <p className="mt-1 text-sm text-slate-600">
-          El usuario debe tener una cuenta registrada en TuCarta.bo. Podrá ver
+          El usuario debe tener una cuenta registrada en Tu QaRta. Podrá ver
           el mapa de mesas, los pedidos y actualizar su estado.
         </p>
 
-        <form action={formAction} className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-end">
-          <div className="flex-1">
+        <form action={formAction} className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-end">
+          <div className="min-w-0 flex-1">
             <label htmlFor="employee-email" className="mb-1.5 block text-sm font-medium text-slate-700">
               Correo electrónico
             </label>
@@ -48,13 +48,13 @@ export function EmployeeManager({ employees }: EmployeeManagerProps) {
               required
               autoComplete="off"
               placeholder="bartender@local.com"
-              className="h-11 w-full rounded-lg border border-slate-300 px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900"
+              className="h-11 w-full rounded-lg border border-slate-300 px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple"
             />
             {state.fieldErrors?.email ? (
               <p className="mt-1 text-sm text-red-600">{state.fieldErrors.email[0]}</p>
             ) : null}
           </div>
-          <SubmitButton className="h-11 shrink-0 rounded-lg bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-800 disabled:opacity-60">
+          <SubmitButton className="!h-11 !w-auto shrink-0 rounded-lg bg-brand-purple px-4 text-sm font-semibold text-white hover:bg-brand-purple-hover disabled:opacity-60 sm:self-end">
             Agregar
           </SubmitButton>
         </form>

@@ -71,7 +71,7 @@ export function CartaThemeRoot({
       <div
         id="carta-theme-root"
         data-cart-template={theme.cart_template}
-        className={`min-h-screen ${fontClass}`}
+        className={`min-h-screen overflow-x-hidden ${fontClass}`}
         style={shellStyle}
         data-show-hours={theme.show_hours ? "true" : "false"}
         data-show-instagram={theme.show_instagram ? "true" : "false"}

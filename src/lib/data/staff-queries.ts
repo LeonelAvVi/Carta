@@ -3,13 +3,16 @@ import { createClient } from "@/lib/supabase/server";
 import { mapOrderWithTable, ORDER_WITH_TABLE_SELECT } from "@/lib/data/order-mappers";
 import type { OrderWithTable, RestaurantEmployeeWithProfile, TableRow } from "@/lib/types";
 
+export const TABLE_ROW_SELECT =
+  "id, restaurant_id, name, slug, is_active, assistance_kind, assistance_requested_at, discount_amount, discount_description, created_at, updated_at";
+
 export const getRestaurantTables = cache(
   async (restaurantId: string): Promise<TableRow[]> => {
     const supabase = createClient();
 
     const { data, error } = await supabase
       .from("tables")
-      .select("id, restaurant_id, name, slug, is_active, created_at, updated_at")
+      .select(TABLE_ROW_SELECT)
       .eq("restaurant_id", restaurantId)
       .eq("is_active", true)
       .order("name", { ascending: true });
@@ -19,7 +22,7 @@ export const getRestaurantTables = cache(
       return [];
     }
 
-    return data ?? [];
+    return (data ?? []) as TableRow[];
   }
 );
 

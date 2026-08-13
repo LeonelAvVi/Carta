@@ -93,7 +93,6 @@ export function CartaCartProvider({
       }
       return [...current, { ...item, key, quantity: 1 }];
     });
-    setOpen(true);
   }, [table]);
 
   const removeItem = useCallback((key: string) => {

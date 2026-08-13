@@ -214,10 +214,15 @@ export const getCategoriesWithProducts = cache(
   }
 );
 
-export function getPublicCartaUrl(slug: string): string {
-  const base = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
-  if (base) return `${base}/carta/${slug}`;
-  return `/carta/${slug}`;
+export function getPublicCartaUrl(slug: string, baseUrl?: string): string {
+  const path = `/carta/${slug}`;
+  const configured = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
+  const base =
+    baseUrl?.replace(/\/$/, "") ||
+    configured ||
+    (typeof window !== "undefined" ? window.location.origin : "");
+  if (base) return `${base}${path}`;
+  return path;
 }
 
 export const getTopProductsByPeriod = cache(

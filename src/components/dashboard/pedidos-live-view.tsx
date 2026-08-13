@@ -11,7 +11,10 @@ import { NEXT_ORDER_STATUS } from "@/lib/validations/order";
 
 function selectOrdersToDisplay(orders: OrderWithTable[]): OrderWithTable[] {
   const active = orders.filter(
-    (o) => o.status !== "delivered" && o.status !== "cancelled"
+    (o) =>
+      o.status !== "delivered" &&
+      o.status !== "cancelled" &&
+      o.status !== "closed"
   );
   return active.length > 0 ? active : orders;
 }
@@ -32,7 +35,10 @@ export function PedidosLiveView({
   const [isPending, startTransition] = useTransition();
 
   const activeOrders = orders.filter(
-    (o) => o.status !== "delivered" && o.status !== "cancelled"
+    (o) =>
+      o.status !== "delivered" &&
+      o.status !== "cancelled" &&
+      o.status !== "closed"
   );
   const displayOrders = selectOrdersToDisplay(orders);
 
@@ -47,6 +53,24 @@ export function PedidosLiveView({
       );
 
       const result = await updateOrderStatusAction(orderId, next);
+      if (result?.error && previous) {
+        setOrders((prev) =>
+          prev.map((o) => (o.id === orderId ? previous : o))
+        );
+      }
+    });
+  }
+
+  function cancelOrder(orderId: string) {
+    startTransition(async () => {
+      const previous = orders.find((o) => o.id === orderId);
+      setOrders((prev) =>
+        prev.map((o) =>
+          o.id === orderId ? { ...o, status: "cancelled" as const } : o
+        )
+      );
+
+      const result = await updateOrderStatusAction(orderId, "cancelled");
       if (result?.error && previous) {
         setOrders((prev) =>
           prev.map((o) => (o.id === orderId ? previous : o))
@@ -90,6 +114,7 @@ export function PedidosLiveView({
           orders={displayOrders}
           isPending={isPending}
           onAdvanceStatus={advanceStatus}
+          onCancelOrder={cancelOrder}
         />
       </div>
     </>

@@ -41,7 +41,7 @@ function getFieldErrors(
 }
 
 const UNREGISTERED_EMAIL_MESSAGE =
-  "El usuario con este correo no está registrado en TuCarta.bo. Pídale que se registre primero";
+  "El usuario con este correo no está registrado en Tu QaRta. Pídale que se registre primero";
 
 async function findProfileIdByEmail(
   supabase: ReturnType<typeof createClient>,

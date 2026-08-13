@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
-    default: "TuCarta.bo",
-    template: "%s | TuCarta.bo",
+    default: "Tu QaRta",
+    template: "%s | Tu QaRta",
   },
-  description: "Carta digital y gestión de pedidos por QR para restaurantes en Bolivia",
+  description:
+    "El menú inteligente. Carta digital y pedidos por QR para restaurantes en Bolivia.",
 };
 
 export default function RootLayout({
@@ -19,7 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={inter.className}>{children}</body>
+      <body className={`${manrope.variable} font-sans antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }

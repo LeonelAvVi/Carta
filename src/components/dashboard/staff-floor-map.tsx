@@ -1,7 +1,12 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { TableRow } from "@/lib/types";
+import type { TableAssistanceKind, TableRow } from "@/lib/types";
+
+const ASSISTANCE_LABEL: Record<TableAssistanceKind, string> = {
+  waiter: "Mesero",
+  bill: "Cuenta",
+};
 
 type StaffFloorMapProps = {
   tables: TableRow[];
@@ -18,7 +23,7 @@ export function StaffFloorMap({
 }: StaffFloorMapProps) {
   if (tables.length === 0) {
     return (
-      <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-slate-600 bg-slate-900/40 p-12">
+      <div className="flex min-h-full items-center justify-center rounded-2xl border border-dashed border-slate-600 bg-slate-900/40 p-12">
         <p className="text-center text-slate-400">
           No hay mesas activas. El dueño debe configurarlas en Mesas.
         </p>
@@ -27,10 +32,10 @@ export function StaffFloorMap({
   }
 
   return (
-    <div className="flex-1 rounded-2xl border border-slate-700/60 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-950 p-8 shadow-inner">
-      <div className="mb-6 flex items-center justify-between gap-4">
+    <div className="min-h-full rounded-2xl border border-slate-700/60 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-800 via-slate-900 to-slate-950 p-8 shadow-inner">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <h2 className="text-lg font-semibold text-slate-200">Mapa de mesas</h2>
-        <div className="flex items-center gap-5 text-xs text-slate-400">
+        <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400">
           <span className="inline-flex items-center gap-2">
             <span className="h-3 w-3 rounded-md border border-slate-600 bg-slate-800" />
             Libre
@@ -38,6 +43,10 @@ export function StaffFloorMap({
           <span className="inline-flex items-center gap-2">
             <span className="h-3 w-3 rounded-md border border-amber-400/60 bg-amber-500/20 shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
             Ocupada
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <span className="h-3 w-3 rounded-md border border-sky-400/60 bg-sky-500/20 shadow-[0_0_10px_rgba(56,189,248,0.5)]" />
+            Llama mesero / cuenta
           </span>
         </div>
       </div>
@@ -51,6 +60,8 @@ export function StaffFloorMap({
         {tables.map((table) => {
           const occupied = occupiedTableIds.has(table.id);
           const selected = selectedTableId === table.id;
+          const assistance = table.assistance_kind ?? null;
+          const needsHelp = Boolean(assistance);
 
           return (
             <button
@@ -60,13 +71,20 @@ export function StaffFloorMap({
               className={cn(
                 "group relative flex aspect-square flex-col items-center justify-center rounded-2xl border-2 px-3 py-4 text-center transition-all duration-300",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900",
-                occupied
-                  ? "border-amber-400/70 bg-amber-500/10 shadow-[0_0_24px_rgba(251,191,36,0.35)]"
-                  : "border-slate-600/80 bg-slate-800/50 hover:border-slate-500 hover:bg-slate-800",
+                needsHelp
+                  ? "border-sky-400/80 bg-sky-500/15 shadow-[0_0_28px_rgba(56,189,248,0.45)]"
+                  : occupied
+                    ? "border-amber-400/70 bg-amber-500/10 shadow-[0_0_24px_rgba(251,191,36,0.35)]"
+                    : "border-slate-600/80 bg-slate-800/50 hover:border-slate-500 hover:bg-slate-800",
                 selected && "ring-2 ring-amber-300 ring-offset-2 ring-offset-slate-900"
               )}
             >
-              {occupied ? (
+              {needsHelp ? (
+                <span
+                  className="absolute right-3 top-3 h-2.5 w-2.5 animate-pulse rounded-full bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.9)]"
+                  aria-hidden
+                />
+              ) : occupied ? (
                 <span
                   className="absolute right-3 top-3 h-2.5 w-2.5 animate-pulse rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.9)]"
                   aria-hidden
@@ -76,7 +94,11 @@ export function StaffFloorMap({
               <span
                 className={cn(
                   "text-2xl font-bold tabular-nums",
-                  occupied ? "text-amber-300" : "text-slate-300"
+                  needsHelp
+                    ? "text-sky-300"
+                    : occupied
+                      ? "text-amber-300"
+                      : "text-slate-300"
                 )}
               >
                 {table.name}
@@ -84,10 +106,18 @@ export function StaffFloorMap({
               <span
                 className={cn(
                   "mt-2 text-xs font-medium uppercase tracking-wide",
-                  occupied ? "text-amber-400/90" : "text-slate-500"
+                  needsHelp
+                    ? "text-sky-300"
+                    : occupied
+                      ? "text-amber-400/90"
+                      : "text-slate-500"
                 )}
               >
-                {occupied ? "Ocupada" : "Libre"}
+                {needsHelp
+                  ? ASSISTANCE_LABEL[assistance]
+                  : occupied
+                    ? "Ocupada"
+                    : "Libre"}
               </span>
             </button>
           );
