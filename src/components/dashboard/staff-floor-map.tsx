@@ -113,7 +113,7 @@ export function StaffFloorMap({
                       : "text-slate-500"
                 )}
               >
-                {needsHelp
+                {assistance
                   ? ASSISTANCE_LABEL[assistance]
                   : occupied
                     ? "Ocupada"
