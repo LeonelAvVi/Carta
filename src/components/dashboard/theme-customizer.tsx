@@ -499,13 +499,13 @@ export function ThemeCustomizer({ initialTheme, slug }: ThemeCustomizerProps) {
                 <Divider />
                 <SectionLabel>Redes sociales</SectionLabel>
                 <ToggleRow label="Instagram" checked={theme.show_instagram} onChange={(v) => updateField("show_instagram", v)} />
-                <TextRow label="URL Instagram" value={theme.instagram_url ?? ""} onChange={(v) => updateField("instagram_url", v || null)} placeholder="https://instagram.com/..." />
+                <TextRow label="URL Instagram" value={theme.instagram_url ?? ""} onChange={(v) => updateField("instagram_url", v || null)} placeholder="https://instagram.com/tuqartabolivia" />
                 <ToggleRow label="Facebook" checked={theme.show_facebook} onChange={(v) => updateField("show_facebook", v)} />
                 <TextRow label="URL Facebook" value={theme.facebook_url ?? ""} onChange={(v) => updateField("facebook_url", v || null)} placeholder="https://facebook.com/..." />
                 <ToggleRow label="WhatsApp" checked={theme.show_whatsapp} onChange={(v) => updateField("show_whatsapp", v)} />
-                <TextRow label="Número WhatsApp" value={theme.whatsapp_number ?? ""} onChange={(v) => updateField("whatsapp_number", v || null)} placeholder="59170000000" />
+                <TextRow label="Número WhatsApp" value={theme.whatsapp_number ?? ""} onChange={(v) => updateField("whatsapp_number", v || null)} placeholder="59157951232" />
                 <ToggleRow label="TikTok" checked={theme.show_tiktok} onChange={(v) => updateField("show_tiktok", v)} />
-                <TextRow label="URL TikTok" value={theme.tiktok_url ?? ""} onChange={(v) => updateField("tiktok_url", v || null)} placeholder="https://tiktok.com/@..." />
+                <TextRow label="URL TikTok" value={theme.tiktok_url ?? ""} onChange={(v) => updateField("tiktok_url", v || null)} placeholder="https://tiktok.com/@tu.qarta.bolivia" />
                 <ColorRow label="Fondo íconos" value={theme.social_icon_bg} onChange={(v) => updateField("social_icon_bg", v)} />
                 <ColorRow label="Color íconos" value={theme.social_icon_color} onChange={(v) => updateField("social_icon_color", v)} />
 

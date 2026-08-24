@@ -70,7 +70,7 @@ El panel funciona bien en **computadora y celular**, para que puedas actualizar 
 1. Te registrás con email y contraseña.
 2. Completás los datos de tu negocio: **nombre**, **descripción** (opcional), **dirección** y **teléfono** si querés que aparezcan al final de la carta.
 3. Subís tu **logo** (la imagen que representa tu marca).
-4. Elegís la **dirección web** de tu carta (por ejemplo: `tucarta.bo/carta/mi-cafe-sucre`). Ese enlace es el que va detrás del QR.
+4. Elegís la **dirección web** de tu carta (por ejemplo: `tuqarta.app/carta/mi-cafe-sucre`). Ese enlace es el que va detrás del QR.
 
 Al guardar, tu carta queda lista para empezar a cargar productos. En el plan de prueba tenés un período gratis para probar.
 
@@ -247,4 +247,4 @@ Si tu equipo de sistemas, desarrollador o integrador necesita detalles de base d
 
 ---
 
-*TuCarta.bo — Carta digital para restaurantes y locales en Bolivia y Latinoamérica.*
+*Tu QaRta (tuqarta.app) — Carta digital para restaurantes y locales en Bolivia y Latinoamérica.*

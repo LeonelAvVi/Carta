@@ -1,20 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { brandWhatsAppHref } from "@/lib/brand/contact";
 import { cn } from "@/lib/utils";
 
-/**
- * Número en formato internacional sin + ni espacios (ej. Bolivia: 5917XXXXXXX).
- * Configurable con NEXT_PUBLIC_CONTACT_WHATSAPP.
- */
-const WHATSAPP_NUMBER =
-  process.env.NEXT_PUBLIC_CONTACT_WHATSAPP?.replace(/\D/g, "") || "59170000000";
-
-const WHATSAPP_MESSAGE = encodeURIComponent(
+const href = brandWhatsAppHref(
   "Hola, quiero saber más sobre Tu QaRta para mi restaurante."
 );
-
-const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`;
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (

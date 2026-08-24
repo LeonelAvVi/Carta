@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
+import { BRAND_SITE_URL } from "@/lib/brand/contact";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -9,6 +10,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(BRAND_SITE_URL),
   title: {
     default: "Tu QaRta",
     template: "%s | Tu QaRta",

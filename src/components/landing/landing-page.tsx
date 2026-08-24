@@ -15,6 +15,11 @@ import { FadeIn } from "@/components/landing/fade-in";
 import { FloatingContactButton } from "@/components/landing/floating-contact";
 import { LandingNav } from "@/components/landing/landing-nav";
 import { CartaMockup, DashboardMockup } from "@/components/landing/mockups";
+import {
+  BRAND_SITE_URL,
+  BRAND_SOCIAL,
+  brandWhatsAppHref,
+} from "@/lib/brand/contact";
 
 type LandingPageProps = {
   isAuthenticated: boolean;
@@ -529,14 +534,50 @@ export function LandingPage({ isAuthenticated }: LandingPageProps) {
             <p className="text-sm text-slate-400">
               © {new Date().getFullYear()} Tu QaRta — El menú inteligente.
             </p>
+            <a
+              href={BRAND_SITE_URL}
+              className="text-xs text-slate-500 transition-colors hover:text-brand-purple"
+            >
+              tuqarta.app
+            </a>
           </div>
-          <div className="flex gap-6 text-sm text-slate-400">
-            <Link href="/login" className="transition-colors hover:text-brand-purple">
-              Iniciar sesión
-            </Link>
-            <Link href="/register" className="transition-colors hover:text-brand-purple">
-              Registrarse
-            </Link>
+          <div className="flex flex-col items-center gap-4 sm:items-end">
+            <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-400 sm:justify-end">
+              <a
+                href={BRAND_SOCIAL.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-brand-purple"
+              >
+                Instagram
+              </a>
+              <a
+                href={BRAND_SOCIAL.tiktok}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-brand-purple"
+              >
+                TikTok
+              </a>
+              <a
+                href={brandWhatsAppHref(
+                  "Hola, quiero saber más sobre Tu QaRta para mi restaurante."
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-brand-purple"
+              >
+                WhatsApp
+              </a>
+            </div>
+            <div className="flex gap-6 text-sm text-slate-400">
+              <Link href="/login" className="transition-colors hover:text-brand-purple">
+                Iniciar sesión
+              </Link>
+              <Link href="/register" className="transition-colors hover:text-brand-purple">
+                Registrarse
+              </Link>
+            </div>
           </div>
         </div>
       </footer>

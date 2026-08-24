@@ -79,9 +79,15 @@ export function CartaFooter({ restaurant, theme }: CartaFooterProps) {
 
       <p>
         Carta digital por{" "}
-        <span className="font-semibold" style={{ color: "var(--tab-active-bg)" }}>
-          TuCarta.bo
-        </span>
+        <a
+          href="https://tuqarta.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--social-icon-color)] focus-visible:ring-offset-2"
+          style={{ color: "var(--tab-active-bg)" }}
+        >
+          Tu QaRta
+        </a>
       </p>
     </footer>
   );

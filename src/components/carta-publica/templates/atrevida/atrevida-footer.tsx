@@ -40,10 +40,15 @@ export function AtrevidaFooter({ theme }: AtrevidaFooterProps) {
       )}
 
       <p className="text-[9px]" style={{ color: "var(--footer-text)" }}>
-        TuCarta
-        <span className="font-semibold" style={{ color: "var(--tab-active-bg)" }}>
-          .bo
-        </span>
+        <a
+          href="https://tuqarta.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold underline-offset-2 hover:underline"
+          style={{ color: "var(--tab-active-bg)" }}
+        >
+          tuqarta.app
+        </a>
       </p>
     </footer>
   );

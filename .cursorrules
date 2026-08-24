@@ -190,8 +190,10 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SERVICE_ROLE_KEY=       # solo en server, nunca al cliente
 RESEND_API_KEY=
-NEXT_PUBLIC_APP_URL=             # ej: https://tucarta.bo
+NEXT_PUBLIC_APP_URL=             # ej: https://tuqarta.app
+NEXT_PUBLIC_CONTACT_WHATSAPP=    # ej: 59157951232 (sin +)
 ```
+
 
 ## Convención de respuesta esperada de Cursor
 Cuando generes código para este proyecto:
