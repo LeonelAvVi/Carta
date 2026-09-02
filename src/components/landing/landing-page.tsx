@@ -3,6 +3,7 @@ import {
   BarChart3,
   Bell,
   Check,
+  MessageCircle,
   QrCode,
   Smartphone,
   Sparkles,
@@ -96,41 +97,15 @@ const features = [
   },
 ];
 
-const plans = [
-  {
-    name: "Trial",
-    price: "Gratis",
-    period: "para empezar",
-    highlights: ["30 platos", "Fotos incluidas", "Analytics básico", "1 local"],
-    featured: false,
-  },
-  {
-    name: "Básico",
-    price: "$7 USD",
-    period: "/ mes",
-    highlights: ["30 platos", "1 local", "Analytics básico", "Carta en Bs."],
-    featured: false,
-  },
-  {
-    name: "Pro",
-    price: "$18 USD",
-    period: "/ mes",
-    highlights: [
-      "Platos ilimitados",
-      "Fotos de platos",
-      "Analytics completo",
-      "Mapa de mesas",
-    ],
-    featured: true,
-  },
-  {
-    name: "Premium",
-    price: "$35 USD",
-    period: "/ mes",
-    highlights: ["Todo de Pro", "Hasta 5 sucursales", "Soporte prioritario"],
-    featured: false,
-  },
+const contactReasons = [
+  "Te explicamos cómo quedaría en tu local, sin tecnicismos",
+  "Respondemos en minutos por WhatsApp",
+  "Te acompañamos desde el primer QR hasta el primer pedido",
 ];
+
+const CONTACT_WHATSAPP_HREF = brandWhatsAppHref(
+  "Hola, ya vi Tu QaRta y quiero hablar con alguien para implementarlos en mi restaurante."
+);
 
 function ChartMockup() {
   return (
@@ -400,81 +375,11 @@ export function LandingPage({ isAuthenticated }: LandingPageProps) {
           </div>
         </section>
 
-        {/* Planes */}
+        {/* Contacto — cierre de conversión cuando ya entendió el producto */}
         <section
-          id="planes"
-          className="relative overflow-hidden border-t border-brand-purple/10 bg-[#E8E2FF] py-20 sm:py-24"
+          id="contacto"
+          className="relative overflow-hidden bg-gradient-to-br from-brand-purple via-[#4F35E8] to-[#111827] py-20 text-white sm:py-28"
         >
-          <div
-            className="pointer-events-none absolute -right-24 top-10 h-72 w-72 rounded-full bg-brand-purple/30 blur-3xl"
-            aria-hidden
-          />
-          <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <FadeIn>
-              <div className="mx-auto max-w-2xl text-center">
-                <h2 className="text-3xl font-bold tracking-tight text-brand sm:text-4xl">
-                  Planes simples,{" "}
-                  <span className="text-brand-purple">sin sorpresas</span>
-                </h2>
-                <p className="mt-4 text-slate-600">
-                  Empieza gratis. Tu carta muestra precios en bolivianos (Bs.) — la moneda que
-                  tus clientes usan cada día.
-                </p>
-              </div>
-            </FadeIn>
-
-            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {plans.map((plan, index) => (
-                <FadeIn key={plan.name} delay={index * 60}>
-                  <div
-                    className={`flex h-full flex-col rounded-2xl border p-6 ${
-                      plan.featured
-                        ? "border-transparent bg-brand-purple text-white shadow-2xl shadow-brand-purple/40"
-                        : "border-brand-purple/15 bg-white/90 backdrop-blur-sm"
-                    }`}
-                  >
-                    {plan.featured ? (
-                      <span className="mb-3 inline-flex w-fit rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold text-white">
-                        Recomendado
-                      </span>
-                    ) : null}
-                    <h3
-                      className={`text-lg font-semibold ${plan.featured ? "text-white" : "text-brand"}`}
-                    >
-                      {plan.name}
-                    </h3>
-                    <p className="mt-2">
-                      <span className="text-3xl font-bold">{plan.price}</span>
-                      <span
-                        className={`text-sm ${plan.featured ? "text-white/75" : "text-slate-500"}`}
-                      >
-                        {" "}
-                        {plan.period}
-                      </span>
-                    </p>
-                    <ul className="mt-6 flex-1 space-y-3">
-                      {plan.highlights.map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-sm">
-                          <Check
-                            className={`mt-0.5 h-4 w-4 shrink-0 ${
-                              plan.featured ? "text-white" : "text-brand-purple"
-                            }`}
-                          />
-                          <span className={plan.featured ? "text-white/90" : "text-slate-600"}>
-                            {item}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </FadeIn>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA — morado dominante */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-brand-purple via-[#4F35E8] to-[#111827] py-20 text-white sm:py-28">
           <div
             className="pointer-events-none absolute -left-10 top-1/2 h-64 w-64 -translate-y-1/2 rounded-full border-[16px] border-white/10"
             aria-hidden
@@ -483,45 +388,65 @@ export function LandingPage({ isAuthenticated }: LandingPageProps) {
             className="pointer-events-none absolute -right-16 -top-16 h-80 w-80 rounded-full bg-white/10 blur-2xl"
             aria-hidden
           />
-          <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <div
+            className="pointer-events-none absolute bottom-0 left-1/2 h-40 w-[36rem] -translate-x-1/2 rounded-full bg-white/10 blur-3xl"
+            aria-hidden
+          />
+
+          <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
             <FadeIn>
-              <BrandLogo
-                inverted
-                markClassName="h-12 w-12 mx-auto"
-                className="mb-8 justify-center"
-              />
-              <h2 className="text-3xl font-bold tracking-tight sm:text-5xl">
-                Convierte cada mesa en una experiencia.
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-lg text-white/80">
-                El menú que evoluciona contigo. Donde comienza la experiencia de tu
-                restaurante.
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-white/70">
+                ¿Listo para dar el siguiente paso?
               </p>
-              <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+              <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">
+                Hablemos hoy y llevá Tu QaRta a tu local
+              </h2>
+              <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-white/80">
+                Si ya viste cómo funciona, el siguiente paso es simple: escribimos,
+                resolvemos tus dudas y te ayudamos a activarlo en tu restaurante.
+              </p>
+
+              <ul className="mx-auto mt-8 flex max-w-md flex-col gap-3 text-left">
+                {contactReasons.map((reason) => (
+                  <li key={reason} className="flex items-start gap-3 text-sm text-white/90">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/15">
+                      <Check className="h-3.5 w-3.5 text-white" strokeWidth={2.5} />
+                    </span>
+                    <span>{reason}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <a
+                  href={CONTACT_WHATSAPP_HREF}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-14 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-8 text-base font-semibold text-white shadow-lg shadow-black/20 transition-colors hover:bg-[#20BD5A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-purple active:scale-[0.98]"
+                >
+                  <MessageCircle className="h-5 w-5" strokeWidth={2} />
+                  Escribir por WhatsApp
+                </a>
                 {isAuthenticated ? (
                   <Link
                     href="/dashboard"
-                    className="inline-flex h-12 items-center justify-center rounded-xl bg-white px-8 text-sm font-semibold text-brand-purple transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-purple"
+                    className="inline-flex h-14 items-center justify-center rounded-xl border border-white/40 px-8 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-purple"
                   >
                     Ir al panel
                   </Link>
                 ) : (
-                  <>
-                    <Link
-                      href="/register"
-                      className="inline-flex h-12 items-center justify-center rounded-xl bg-white px-8 text-sm font-semibold text-brand-purple shadow-lg transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-purple"
-                    >
-                      Crear cuenta gratis
-                    </Link>
-                    <Link
-                      href="/login"
-                      className="inline-flex h-12 items-center justify-center rounded-xl border border-white/40 px-8 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-purple"
-                    >
-                      Iniciar sesión
-                    </Link>
-                  </>
+                  <Link
+                    href="/register"
+                    className="inline-flex h-14 items-center justify-center rounded-xl border border-white/40 px-8 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-purple"
+                  >
+                    O crear cuenta gratis
+                  </Link>
                 )}
               </div>
+
+              <p className="mt-6 text-sm text-white/60">
+                Respuesta humana, en español, pensada para dueños de local en Bolivia.
+              </p>
             </FadeIn>
           </div>
         </section>

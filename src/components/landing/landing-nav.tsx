@@ -14,7 +14,7 @@ const links = [
   { href: "#inicio", id: "inicio", label: "Inicio" },
   { href: "#como-funciona", id: "como-funciona", label: "Cómo funciona" },
   { href: "#caracteristicas", id: "caracteristicas", label: "Características" },
-  { href: "#planes", id: "planes", label: "Planes" },
+  { href: "#contacto", id: "contacto", label: "Contacto" },
 ] as const;
 
 export function LandingNav({ isAuthenticated }: LandingNavProps) {
