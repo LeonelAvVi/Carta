@@ -121,6 +121,7 @@ export type MenuItemRow = {
   item_variations: ItemVariationRow[];
   image_url: string | null;
   is_available: boolean;
+  is_visible: boolean;
   is_featured: boolean;
   position: number;
   created_at: string;

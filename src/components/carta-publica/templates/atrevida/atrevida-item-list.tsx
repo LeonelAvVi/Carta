@@ -1,7 +1,8 @@
 import type { CategoryWithProducts, RestaurantThemeRow } from "@/lib/types";
 import { AddToCartControl } from "@/components/carta-publica/add-to-cart-control";
+import { SoldOutBadge } from "@/components/carta-publica/sold-out-badge";
 import { getPublicItemPriceLabel } from "@/lib/carta/item-price";
-import { formatPriceBs } from "@/lib/utils";
+import { cn, formatPriceBs } from "@/lib/utils";
 
 type AtrevidaItemListProps = {
   category: CategoryWithProducts | null;
@@ -35,7 +36,8 @@ export function AtrevidaItemList({ category, theme }: AtrevidaItemListProps) {
         className="mb-2.5 border-b pb-1.5 text-[11px] font-bold font-display"
         style={{
           color: "var(--category-title-color)",
-          borderColor: "color-mix(in srgb, var(--tab-active-bg) 35%, transparent)",
+          borderColor:
+            "color-mix(in srgb, var(--tab-active-bg) 35%, transparent)",
         }}
       >
         {category.name}
@@ -44,74 +46,86 @@ export function AtrevidaItemList({ category, theme }: AtrevidaItemListProps) {
       <ul>
         {category.menu_items.map((item) => {
           const hasVariations = item.item_variations.length > 0;
+          const soldOut = !item.is_available;
 
           return (
             <li
               key={item.id}
-              className="border-b py-2 last:border-b-0"
+              className={cn(
+                "border-b py-2 last:border-b-0",
+                soldOut && "opacity-75"
+              )}
               style={{ borderColor: "var(--item-border)" }}
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0 flex-1">
-                <h3
-                  className="text-[11px] font-semibold"
-                  style={{ color: "var(--item-name-color)" }}
-                >
-                  {item.name}
-                </h3>
-                {item.description ? (
-                  <p
-                    className="mt-0.5 text-[9px] leading-snug"
-                    style={{ color: "var(--item-desc-color)" }}
+                  <h3
+                    className="text-[11px] font-semibold"
+                    style={{ color: "var(--item-name-color)" }}
                   >
-                    {item.description}
-                  </p>
-                ) : null}
+                    {item.name}
+                  </h3>
+                  {item.description ? (
+                    <p
+                      className="mt-0.5 text-[9px] leading-snug"
+                      style={{ color: "var(--item-desc-color)" }}
+                    >
+                      {item.description}
+                    </p>
+                  ) : null}
 
-                {item.is_featured ? (
-                  <span
-                    className="mt-1 inline-block rounded-sm px-1 py-px text-[8px] font-bold uppercase"
-                    style={{
-                      backgroundColor: "var(--tab-active-bg)",
-                      color: "var(--tab-active-text)",
-                    }}
-                  >
-                    {theme.badge_featured_label}
-                  </span>
-                ) : null}
-
-                {hasVariations ? (
-                  <ul className="mt-2 flex flex-col gap-1">
-                    {item.item_variations.map((variation) => (
-                      <li
-                        key={variation.id}
-                        className="flex items-center justify-between gap-2 rounded px-1.5 py-0.5 text-[9px]"
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {soldOut ? (
+                      <SoldOutBadge
+                        theme={theme}
+                        className="inline-block rounded-sm px-1 py-px text-[8px] font-bold uppercase"
+                      />
+                    ) : null}
+                    {item.is_featured ? (
+                      <span
+                        className="inline-block rounded-sm px-1 py-px text-[8px] font-bold uppercase"
                         style={{
-                          backgroundColor: "var(--variation-bg)",
-                          color: "var(--variation-text)",
+                          backgroundColor: "var(--tab-active-bg)",
+                          color: "var(--tab-active-text)",
                         }}
                       >
-                        <span>{variation.name}</span>
-                        <span
-                          className="shrink-0 font-semibold tabular-nums"
-                          style={{ color: "var(--variation-price)" }}
-                        >
-                          {formatPriceBs(Number(variation.price))}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-              </div>
+                        {theme.badge_featured_label}
+                      </span>
+                    ) : null}
+                  </div>
 
-              {!hasVariations ? (
-                <p
-                  className="shrink-0 text-sm font-bold tabular-nums"
-                  style={{ color: "var(--item-price-color)" }}
-                >
-                  {getPublicItemPriceLabel(item)}
-                </p>
-              ) : null}
+                  {hasVariations ? (
+                    <ul className="mt-2 flex flex-col gap-1">
+                      {item.item_variations.map((variation) => (
+                        <li
+                          key={variation.id}
+                          className="flex items-center justify-between gap-2 rounded px-1.5 py-0.5 text-[9px]"
+                          style={{
+                            backgroundColor: "var(--variation-bg)",
+                            color: "var(--variation-text)",
+                          }}
+                        >
+                          <span>{variation.name}</span>
+                          <span
+                            className="shrink-0 font-semibold tabular-nums"
+                            style={{ color: "var(--variation-price)" }}
+                          >
+                            {formatPriceBs(Number(variation.price))}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+
+                {!hasVariations ? (
+                  <p
+                    className="shrink-0 text-sm font-bold tabular-nums"
+                    style={{ color: "var(--item-price-color)" }}
+                  >
+                    {getPublicItemPriceLabel(item)}
+                  </p>
+                ) : null}
               </div>
 
               <AddToCartControl item={item} className="mt-2" compact />

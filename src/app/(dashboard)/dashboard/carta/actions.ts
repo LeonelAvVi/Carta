@@ -474,6 +474,7 @@ export async function createMenuItemAction(
       variations: parsed.data.variations,
       position,
       is_available: true,
+      is_visible: true,
     })
     .select("id")
     .single();
@@ -529,7 +530,7 @@ export async function updateMenuItemAction(
     description: formData.get("description"),
     price: formData.get("price"),
     variations: formData.get("variations"),
-    isAvailable: formData.get("isAvailable"),
+    visibilityStatus: formData.get("visibilityStatus"),
   });
 
   if (!parsed.success) {
@@ -575,6 +576,7 @@ export async function updateMenuItemAction(
       price: parsed.data.price,
       variations: parsed.data.variations,
       is_available: parsed.data.isAvailable,
+      is_visible: parsed.data.isVisible,
       image_url: imageResult.imageUrl,
     })
     .eq("id", menuItemId)

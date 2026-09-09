@@ -120,7 +120,8 @@ export const getDashboardStats = cache(
         .from("menu_items")
         .select("id", { count: "exact", head: true })
         .eq("restaurant_id", restaurantId)
-        .eq("is_available", true),
+        .eq("is_available", true)
+        .eq("is_visible", true),
     ]);
 
     if (categories.error) console.error("categories count:", categories.error.message);
@@ -184,7 +185,7 @@ export const getCategoriesWithProducts = cache(
     const { data: items, error: itemsError } = await supabase
       .from("menu_items")
       .select(
-        "id, category_id, restaurant_id, name, description, price, variations, image_url, is_available, is_featured, position, created_at"
+        "id, category_id, restaurant_id, name, description, price, variations, image_url, is_available, is_visible, is_featured, position, created_at"
       )
       .eq("restaurant_id", restaurantId)
       .order("position", { ascending: true });
@@ -199,6 +200,7 @@ export const getCategoriesWithProducts = cache(
       const normalized: MenuItemRow = {
         ...item,
         is_featured: item.is_featured ?? false,
+        is_visible: item.is_visible ?? true,
         variations: normalizeMenuItemVariations(item.variations),
         item_variations: [],
       };

@@ -65,6 +65,26 @@ export const menuItemFormSchema = z
       .enum(["true", "false"])
       .optional()
       .transform((v) => v === undefined || v === "true"),
+    isVisible: z
+      .enum(["true", "false"])
+      .optional()
+      .transform((v) => v === undefined || v === "true"),
+    visibilityStatus: z.enum(["available", "sold_out", "hidden"]).optional(),
+  })
+  .transform((data) => {
+    if (data.visibilityStatus === "available") {
+      return { ...data, isAvailable: true, isVisible: true };
+    }
+    if (data.visibilityStatus === "sold_out") {
+      return { ...data, isAvailable: false, isVisible: true };
+    }
+    if (data.visibilityStatus === "hidden") {
+      return { ...data, isAvailable: true, isVisible: false };
+    }
+    return {
+      ...data,
+      isVisible: data.isVisible ?? true,
+    };
   })
   .refine(
     (data) => data.price !== null || (data.variations?.length ?? 0) > 0,

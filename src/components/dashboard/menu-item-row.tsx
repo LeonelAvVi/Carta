@@ -113,15 +113,27 @@ export function MenuItemRowComponent({ item }: MenuItemRowProps) {
           />
 
           <div>
-            <label className="text-xs font-medium text-slate-600">Disponibilidad</label>
+            <label className="text-xs font-medium text-slate-600">
+              Visibilidad en la carta
+            </label>
             <select
-              name="isAvailable"
-              defaultValue={item.is_available ? "true" : "false"}
+              name="visibilityStatus"
+              defaultValue={
+                !item.is_visible
+                  ? "hidden"
+                  : !item.is_available
+                    ? "sold_out"
+                    : "available"
+              }
               className="mt-1 h-10 w-full max-w-xs rounded-lg border border-slate-200 px-3 text-sm"
             >
-              <option value="true">Disponible</option>
-              <option value="false">Agotado</option>
+              <option value="available">Disponible</option>
+              <option value="sold_out">Agotado (se ve, no se pide)</option>
+              <option value="hidden">Oculto (no aparece)</option>
             </select>
+            <p className="mt-1 text-[11px] text-slate-500">
+              Agotado: el comensal lo ve con etiqueta. Oculto: no sale en la carta.
+            </p>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -151,7 +163,14 @@ export function MenuItemRowComponent({ item }: MenuItemRowProps) {
     <li className={cn(isPending && "opacity-60")}>
       <Accordion
         title={item.name}
-        subtitle={priceLabel + (!item.is_available ? " · Agotado" : "")}
+        subtitle={
+          priceLabel +
+          (!item.is_visible
+            ? " · Oculto"
+            : !item.is_available
+              ? " · Agotado"
+              : "")
+        }
         leading={thumbnail}
         actions={
           <>

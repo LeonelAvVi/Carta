@@ -30,7 +30,7 @@ async function buildOrderItemsFromDb(
 
   const { data: menuItems, error: menuError } = await supabase
     .from("menu_items")
-    .select("id, name, price, is_available")
+    .select("id, name, price, is_available, is_visible")
     .eq("restaurant_id", restaurantId)
     .in("id", menuItemIds);
 
@@ -67,8 +67,10 @@ async function buildOrderItemsFromDb(
 
   for (const line of inputItems) {
     const menuItem = menuById.get(line.menu_item_id);
-    if (!menuItem || !menuItem.is_available) {
-      return { error: `El producto "${menuItem?.name ?? "seleccionado"}" no está disponible` };
+    if (!menuItem || !menuItem.is_visible || !menuItem.is_available) {
+      return {
+        error: `El producto "${menuItem?.name ?? "seleccionado"}" no está disponible`,
+      };
     }
 
     let unitPrice: number;

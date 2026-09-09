@@ -44,7 +44,7 @@ async function fetchItemVariationsByMenuItem(
     .from("menu_items")
     .select("id")
     .eq("restaurant_id", restaurantId)
-    .eq("is_available", true);
+    .eq("is_visible", true);
 
   if (itemsError || !items?.length) {
     return new Map();
@@ -104,10 +104,10 @@ export const getPublicCategoriesWithProducts = cache(
       supabase
         .from("menu_items")
         .select(
-          "id, category_id, restaurant_id, name, description, price, variations, image_url, is_available, is_featured, position, created_at"
+          "id, category_id, restaurant_id, name, description, price, variations, image_url, is_available, is_visible, is_featured, position, created_at"
         )
         .eq("restaurant_id", restaurantId)
-        .eq("is_available", true)
+        .eq("is_visible", true)
         .order("position", { ascending: true }),
     ]);
 
@@ -124,6 +124,7 @@ export const getPublicCategoriesWithProducts = cache(
       const normalized: MenuItemRow = {
         ...item,
         is_featured: item.is_featured ?? false,
+        is_visible: item.is_visible ?? true,
         variations: normalizeMenuItemVariations(item.variations),
         item_variations: itemVariations,
       };

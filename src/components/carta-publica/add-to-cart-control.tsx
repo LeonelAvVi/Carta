@@ -23,10 +23,27 @@ export function AddToCartControl({
 
   if (!table) return null;
 
+  if (!item.is_available) {
+    return (
+      <p
+        className={cn(
+          "font-semibold",
+          compact ? "text-[10px]" : "text-xs",
+          className
+        )}
+        style={{ color: "var(--badge-unavailable-text)" }}
+      >
+        No disponible por ahora
+      </p>
+    );
+  }
+
   const variations = item.item_variations;
   const hasVariations = variations.length > 0;
 
   function handleAdd() {
+    if (!item.is_available) return;
+
     if (hasVariations) {
       const variation = variations.find((v) => v.id === variationId);
       if (!variation) return;

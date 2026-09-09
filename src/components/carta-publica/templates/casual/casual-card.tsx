@@ -1,8 +1,9 @@
 import Image from "next/image";
 import { AddToCartControl } from "@/components/carta-publica/add-to-cart-control";
+import { SoldOutBadge } from "@/components/carta-publica/sold-out-badge";
 import type { MenuItemRow, RestaurantThemeRow } from "@/lib/types";
 import { getPublicItemPriceLabel } from "@/lib/carta/item-price";
-import { formatPriceBs } from "@/lib/utils";
+import { cn, formatPriceBs } from "@/lib/utils";
 
 type CasualCardProps = {
   item: MenuItemRow;
@@ -11,10 +12,11 @@ type CasualCardProps = {
 
 export function CasualCard({ item, theme }: CasualCardProps) {
   const hasVariations = item.item_variations.length > 0;
+  const soldOut = !item.is_available;
 
   return (
     <article
-      className="overflow-hidden rounded-[10px] border"
+      className={cn("overflow-hidden rounded-[10px] border", soldOut && "opacity-75")}
       style={{
         backgroundColor: "var(--item-bg)",
         borderColor: "var(--item-border)",
@@ -22,7 +24,13 @@ export function CasualCard({ item, theme }: CasualCardProps) {
     >
       {item.image_url ? (
         <div className="relative h-[72px] w-full">
-          <Image src={item.image_url} alt={item.name} fill sizes="160px" className="object-cover" />
+          <Image
+            src={item.image_url}
+            alt={item.name}
+            fill
+            sizes="160px"
+            className={cn("object-cover", soldOut && "grayscale")}
+          />
         </div>
       ) : (
         <div
@@ -35,17 +43,25 @@ export function CasualCard({ item, theme }: CasualCardProps) {
       )}
 
       <div className="p-2">
-        {item.is_featured ? (
-          <span
-            className="mb-1 inline-block rounded px-1.5 py-0.5 text-[8px] font-semibold"
-            style={{
-              backgroundColor: "var(--badge-featured-bg)",
-              color: "var(--badge-featured-text)",
-            }}
-          >
-            {theme.badge_featured_label}
-          </span>
-        ) : null}
+        <div className="mb-1 flex flex-wrap gap-1">
+          {soldOut ? (
+            <SoldOutBadge
+              theme={theme}
+              className="inline-block rounded px-1.5 py-0.5 text-[8px] font-semibold"
+            />
+          ) : null}
+          {item.is_featured ? (
+            <span
+              className="inline-block rounded px-1.5 py-0.5 text-[8px] font-semibold"
+              style={{
+                backgroundColor: "var(--badge-featured-bg)",
+                color: "var(--badge-featured-text)",
+              }}
+            >
+              {theme.badge_featured_label}
+            </span>
+          ) : null}
+        </div>
 
         <h3
           className="line-clamp-2 text-[11px] font-bold leading-tight"

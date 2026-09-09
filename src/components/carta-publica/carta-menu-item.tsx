@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { AddToCartControl } from "@/components/carta-publica/add-to-cart-control";
+import { SoldOutBadge } from "@/components/carta-publica/sold-out-badge";
 import type { MenuItemRow, RestaurantThemeRow } from "@/lib/types";
-import { formatPriceBs } from "@/lib/utils";
+import { cn, formatPriceBs } from "@/lib/utils";
 
 type CartaMenuItemProps = {
   item: MenuItemRow;
@@ -11,10 +12,11 @@ type CartaMenuItemProps = {
 export function CartaMenuItem({ item, theme }: CartaMenuItemProps) {
   const variations = item.item_variations.length > 0 ? item.item_variations : [];
   const hasVariations = variations.length > 0;
+  const soldOut = !item.is_available;
 
   return (
     <article
-      className="flex gap-3 py-4 last:pb-0"
+      className={cn("flex gap-3 py-4 last:pb-0", soldOut && "opacity-75")}
       style={{
         backgroundColor: "var(--item-bg)",
         borderBottom: "0.5px solid var(--item-border)",
@@ -27,7 +29,7 @@ export function CartaMenuItem({ item, theme }: CartaMenuItemProps) {
             alt={item.name}
             fill
             sizes="80px"
-            className="object-cover"
+            className={cn("object-cover", soldOut && "grayscale")}
           />
         </div>
       ) : (
@@ -67,17 +69,20 @@ export function CartaMenuItem({ item, theme }: CartaMenuItemProps) {
           </p>
         ) : null}
 
-        {item.is_featured ? (
-          <span
-            className="mt-2 inline-flex rounded-md px-2 py-0.5 text-xs font-medium"
-            style={{
-              backgroundColor: "var(--badge-featured-bg)",
-              color: "var(--badge-featured-text)",
-            }}
-          >
-            {theme.badge_featured_label}
-          </span>
-        ) : null}
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {soldOut ? <SoldOutBadge theme={theme} /> : null}
+          {item.is_featured ? (
+            <span
+              className="inline-flex rounded-md px-2 py-0.5 text-xs font-medium"
+              style={{
+                backgroundColor: "var(--badge-featured-bg)",
+                color: "var(--badge-featured-text)",
+              }}
+            >
+              {theme.badge_featured_label}
+            </span>
+          ) : null}
+        </div>
 
         {hasVariations ? (
           <ul className="mt-3 flex flex-col gap-1.5">
