@@ -32,15 +32,7 @@ export function CartaMenuItem({ item, theme }: CartaMenuItemProps) {
             className={cn("object-cover", soldOut && "grayscale")}
           />
         </div>
-      ) : (
-        <div
-          className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg text-lg text-[color:var(--item-desc-color)]"
-          style={{ backgroundColor: "var(--item-image-placeholder-bg)" }}
-          aria-hidden
-        >
-          📷
-        </div>
-      )}
+      ) : null}
 
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-3">

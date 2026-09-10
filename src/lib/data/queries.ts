@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { BRAND_SITE_URL } from "@/lib/brand/contact";
 import { createClient } from "@/lib/supabase/server";
 import type {
   CategoryRow,
@@ -222,9 +223,8 @@ export function getPublicCartaUrl(slug: string, baseUrl?: string): string {
   const base =
     baseUrl?.replace(/\/$/, "") ||
     configured ||
-    (typeof window !== "undefined" ? window.location.origin : "");
-  if (base) return `${base}${path}`;
-  return path;
+    BRAND_SITE_URL;
+  return `${base}${path}`;
 }
 
 export const getTopProductsByPeriod = cache(

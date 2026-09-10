@@ -32,15 +32,7 @@ export function CasualCard({ item, theme }: CasualCardProps) {
             className={cn("object-cover", soldOut && "grayscale")}
           />
         </div>
-      ) : (
-        <div
-          className="flex h-[72px] items-center justify-center text-2xl"
-          style={{ backgroundColor: "var(--item-image-placeholder-bg)" }}
-          aria-hidden
-        >
-          🍽️
-        </div>
-      )}
+      ) : null}
 
       <div className="p-2">
         <div className="mb-1 flex flex-wrap gap-1">
