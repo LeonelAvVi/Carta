@@ -8,7 +8,11 @@ import { SubmitButton } from "@/components/shared/submit-button";
 
 const initialState: AuthFormState = {};
 
-export function LoginForm() {
+type LoginFormProps = {
+  defaultEmail?: string;
+};
+
+export function LoginForm({ defaultEmail }: LoginFormProps) {
   const [state, formAction] = useFormState(loginAction, initialState);
 
   return (
@@ -21,6 +25,7 @@ export function LoginForm() {
         autoComplete="email"
         placeholder="tu@restaurante.com"
         required
+        defaultValue={defaultEmail}
         error={state.fieldErrors?.email?.[0]}
       />
 

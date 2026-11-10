@@ -5,6 +5,10 @@ import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { getPostLoginPath } from "@/lib/data/restaurant-access";
 import { mapAuthErrorMessage } from "@/lib/auth/errors";
+import {
+  getCanonicalAppBaseUrl,
+  isEphemeralVercelHost,
+} from "@/lib/carta/app-url";
 import { loginSchema, registerSchema } from "@/lib/validations/auth";
 
 export type AuthFormState = {
@@ -28,21 +32,16 @@ async function getAuthRedirectUrl() {
   const origin = headersList.get("origin");
   const host = headersList.get("host");
 
-  if (origin) {
+  if (origin && !isEphemeralVercelHost(new URL(origin).host)) {
     return `${origin}/auth/callback`;
   }
 
-  if (host) {
+  if (host && !isEphemeralVercelHost(host)) {
     const protocol = host.includes("localhost") ? "http" : "https";
     return `${protocol}://${host}/auth/callback`;
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-  if (appUrl) {
-    return `${appUrl.replace(/\/$/, "")}/auth/callback`;
-  }
-
-  return undefined;
+  return `${getCanonicalAppBaseUrl()}/auth/callback`;
 }
 
 export async function loginAction(
